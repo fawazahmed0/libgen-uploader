@@ -4,6 +4,10 @@
   "description": "Upload books to Library genesis",
   "main": "uploader.js",
   "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fawazahmed0/libgen-uploader.git"
+  },
   "keywords": [
     "libgen",
     "libgen uploader",
@@ -15,8 +19,12 @@
     "books",
     "book uploader"
   ],
-  "author": "",
-  "license": "ISC",
+  "author": "Fawaz Ahmed",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fawazahmed0/libgen-uploader/issues"
+  },
+  "homepage": "https://github.com/fawazahmed0/libgen-uploader#readme",
   "dependencies": {
     "ipfs-only-hash": "^4.0.0",
     "playwright": "^1.16.3"
