@@ -57,5 +57,11 @@ upload([book1,book2], {headless:false}).then(console.log)
     sharelink: 'https://library.bz/main/uploads/B7CCFF6A3313AE14181665B9148195A4',
     ipfslink: 'https://cloudflare-ipfs.com/ipfs/QmeVbw2KJwYtT9RZNnBru4Xw89N9ptFVkK5kZH5SEkdRwM?filename=title.pdf'
   }
-  ]
+]
 ```
+**Note:** This package supports all text fields, just give the field label in the metadata object and it will input text near that field, for example if you want to enter, you can do this way `{'doi':'doi value'}` , or open library id `{'open library':'open library id value'}` and so on.
+
+  
+### Support:
+You can help support this package by as little as $3, because this package needs regular maintenance<br>
+[Support Link](https://fawazahmed0.github.io/donate)
