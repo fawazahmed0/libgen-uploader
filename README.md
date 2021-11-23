@@ -1,7 +1,7 @@
 <h1 align="center">Libgen Books Uploader</h1>
 
 <p align="center">
-  <img width="460" height="300" src="assets/youtube.png">
+  <img width="460" height="300" src="books.jpg">
   
   [![npm version](https://img.shields.io/npm/v/libgen-uploader.svg?style=flat)](https://www.npmjs.com/package/libgen-uploader)
   
