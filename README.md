@@ -63,5 +63,5 @@ upload([book1,book2], {headless:false}).then(console.log)
 **Note 2:** Dropdowns like Topic etc are not supported yet, Only text fields for now
   
 ### Support:
-You can help support this package by as little as $3, because this package needs regular maintenance<br>
+You can help support this package by as little as $3<br>
 [Support Link](https://fawazahmed0.github.io/donate)
