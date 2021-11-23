@@ -1,5 +1,4 @@
 // Note: metadataobject supports all input fields, for example author, edition, issn ,city etc
-// ipfslink will start working after 4-5 days
 const {upload} = require('./uploader.js')
 
     let metadata1 = {"title":"The Soul's Journey After Death","language":"english","isbn":"978-1643541365"}

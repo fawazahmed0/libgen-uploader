@@ -50,12 +50,10 @@ upload([book1,book2], {headless:false}).then(console.log)
 ```js
 [
   {
-    sharelink: 'https://library.bz/main/uploads/B444BF2C1BA48F5F9BA76C4A9E2C6DD6',
-    ipfslink: 'https://cloudflare-ipfs.com/ipfs/QmQqfvUeZngRFFmEA6PayKVZQsgcqFxj35t6zvEmFWiu4V?filename=title.pdf'
+    sharelink: 'https://library.bz/main/uploads/B444BF2C1BA48F5F9BA76C4A9E2C6DD6'
   },
   {
-    sharelink: 'https://library.bz/main/uploads/B7CCFF6A3313AE14181665B9148195A4',
-    ipfslink: 'https://cloudflare-ipfs.com/ipfs/QmeVbw2KJwYtT9RZNnBru4Xw89N9ptFVkK5kZH5SEkdRwM?filename=title.pdf'
+    sharelink: 'https://library.bz/main/uploads/B7CCFF6A3313AE14181665B9148195A4'
   }
 ]
 ```
