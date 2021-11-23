@@ -11,8 +11,8 @@ const cloudflareIPFSLink = 'https://cloudflare-ipfs.com/ipfs/'
 
 const captialize = words => words.split(' ').map( w =>  w.substring(0,1).toUpperCase()+ w.substring(1)).join(' ')
 
-async function upload(books){
-  const browser = await firefox.launch({headless: false});
+async function upload(books, options){
+  const browser = await firefox.launch(options);
   const context = await browser.newContext({
     httpCredentials: {
       username: user,
