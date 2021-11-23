@@ -36,7 +36,15 @@ for(let book of books){
   // await page.selectOption('text="Choose a color"', 'blue');
 
    await page.click('input[type="submit"]',{noWaitAfter:true})
-  await page.waitForSelector('text="Google Books ID"',{timeout:0})
+  await page.waitForNavigation({waitUntil: 'networkidle',timeout:0})
+  const ipfslink = await generateIPFSLink(book.path, Object.entries(book.metadata).filter(([key, val]) => key.toLowerCase().startsWith('title'))[0][1])
+  try{
+  await page.waitForSelector('text="Google Books ID"')
+  }catch(e){
+        console.error(e)
+        allLinks.push({"sharelink":"","ipfslink":ipfslink})
+        continue
+  }
 
   // set language to english, if no language found
   if(Object.keys(book.metadata).filter(e => e.toLowerCase().startsWith('lang')).length == 0){
@@ -60,7 +68,6 @@ await page.click('text=submit')
 let uploadText = 'An upload link to share'
 await page.waitForSelector('text='+uploadText)
 const sharelink = await page.locator('text='+uploadText).locator('a').getAttribute('href')
-const ipfslink = await generateIPFSLink(book.path, Object.entries(book.metadata).filter(([key, val]) => key.toLowerCase().startsWith('title'))[0][1])
 let linkobj = {"sharelink":sharelink,"ipfslink":ipfslink}
     allLinks.push(linkobj)
     if(typeof book.onSuccess === 'function')
