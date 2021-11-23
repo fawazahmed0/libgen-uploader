@@ -1,10 +1,21 @@
 {
   "name": "libgen-uploader",
   "version": "1.0.2",
-  "description": "",
+  "description": "Upload books to Library genesis",
+  "main": "uploader.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [
+    "libgen",
+    "libgen uploader",
+    "libgen upload",
+    "book upload",
+    "library genesis uploader",
+    "library genesis",
+    "library genesis upload",
+    "books",
+    "book uploader"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
