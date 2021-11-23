@@ -59,7 +59,7 @@ upload([book1,book2], {headless:false}).then(console.log)
   }
 ]
 ```
-**Note:** This package supports all text fields, just give the field label in the metadata object and it will input text near that field, for example if you want to enter doi, you add this in metadata object `'doi':'doi value'` , or open library id `'open library':'open library id value'` and so on.
+**Note:** This package supports all text fields, just give the field label in the metadata object and it will input text near that field, for example if you want to enter DOI, you add this in metadata object `'doi':'doi value'` , or open library id `'open library':'open library id value'` and so on.
 
   
 ### Support:
