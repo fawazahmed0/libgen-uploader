@@ -27,7 +27,7 @@ npm i libgen-uploader
 
 ```js
 
-const { upload } = require('libgen-uploader'); //vanilla javascript
+const { upload } = require('libgen-uploader');
 
 let metadata1 = {"title":"Title 1"}
 let book1 = {path:'book1.pdf',metadata:metadata1}
