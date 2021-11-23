@@ -41,9 +41,11 @@ for(let book of books){
   try{
   await page.waitForSelector('text="Google Books ID"')
   }catch(e){
-        console.error(e)
         let md5sum = await getMD5(book.path)
-        allLinks.push({"sharelink":uploadurl+md5sum})
+        let linkobj = {"sharelink":uploadurl+md5sum}
+        allLinks.push(linkobj)
+        if(typeof book.onSuccess === 'function')
+        book.onSuccess(linkobj)
         continue
   }
 
