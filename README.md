@@ -66,3 +66,7 @@ upload([book1,book2], {headless:false}).then(console.log)
 ### Support:
 You can help support this package by as little as $3<br>
 [Support Link](https://fawazahmed0.github.io/donate)
+<br>
+<br>
+  
+[:pencil2:*Improve this page*](https://github.com/fawazahmed0/libgen-uploader/edit/main/README.md)
