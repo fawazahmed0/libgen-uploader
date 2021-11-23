@@ -1,11 +1,14 @@
 const { firefox } = require('playwright');
 const fs = require('fs')
 const path = require('path')
+const crypto = require('crypto');
+const { pipeline } = require('stream/promises');
 const user = 'genesis';
 const pass = 'upload';
 const url = 'https://libgen.rs'
 const nonfictionurl = url + '/librarian'
 const fictionurl = url + '/foreignfiction/librarian'
+const uploadurl = 'https://library.bz/main/uploads/'
 
 const captialize = words => words.split(' ').map( w =>  w.substring(0,1).toUpperCase()+ w.substring(1)).join(' ')
 
@@ -39,7 +42,8 @@ for(let book of books){
   await page.waitForSelector('text="Google Books ID"')
   }catch(e){
         console.error(e)
-        allLinks.push({"sharelink":""})
+        let md5sum = await getMD5(book.path)
+        allLinks.push({"sharelink":uploadurl+md5sum})
         continue
   }
 
@@ -81,6 +85,15 @@ async function setLanguage(page, value){
     await page.fill('input[name="language"]', captialize(value.toLowerCase()))
     await page.selectOption('select[name="language_options"]', captialize(value.toLowerCase()))
 }
+
+async function getMD5(filepath){
+  const hash = crypto.createHash('md5');
+  await pipeline(
+    fs.createReadStream(filepath),
+    hash
+  );
+  return hash.digest('hex').toUpperCase();
+  }
 
 
 module.exports.upload = upload;
