@@ -1,0 +1,14 @@
+{
+  "name": "libgen-uploader",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ipfs-only-hash": "^4.0.0",
+    "playwright": "^1.16.3"
+  }
+}
