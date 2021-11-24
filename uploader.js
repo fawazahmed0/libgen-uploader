@@ -1,4 +1,5 @@
 const { firefox } = require('playwright');
+const IFPSHasher = require('ipfs-only-hash')
 const fs = require('fs')
 const path = require('path')
 const crypto = require('crypto');
@@ -9,6 +10,7 @@ const url = 'https://libgen.rs'
 const nonfictionurl = url + '/librarian'
 const fictionurl = url + '/foreignfiction/librarian'
 const uploadurl = 'https://library.bz/main/uploads/'
+const cloudflareIPFSLink = 'https://cloudflare-ipfs.com/ipfs/'
 
 const captialize = words => words.split(' ').map( w =>  w.substring(0,1).toUpperCase()+ w.substring(1)).join(' ')
 
@@ -38,11 +40,12 @@ for(let book of books){
 
    await page.click('input[type="submit"]',{noWaitAfter:true})
   await page.waitForNavigation({waitUntil: 'networkidle',timeout:0})
+  const ipfslink = await generateIPFSLink(book.path, Object.entries(book.metadata).filter(([key, val]) => key.toLowerCase().startsWith('title'))[0][1])
   try{
   await page.waitForSelector('text="Google Books ID"')
   }catch(e){
         let md5sum = await getMD5(book.path)
-        let linkobj = {"sharelink":uploadurl+md5sum}
+        let linkobj = {"sharelink":uploadurl+md5sum,"ipfslink":ipfslink}
         allLinks.push(linkobj)
         if(typeof book.onSuccess === 'function')
         book.onSuccess(linkobj)
@@ -71,7 +74,7 @@ await page.click('text=submit')
 let uploadText = 'An upload link to share'
 await page.waitForSelector('text='+uploadText)
 const sharelink = await page.locator('text='+uploadText).locator('a').getAttribute('href')
-let linkobj = {"sharelink":sharelink}
+let linkobj = {"sharelink":sharelink,"ipfslink":ipfslink}
     allLinks.push(linkobj)
     if(typeof book.onSuccess === 'function')
         book.onSuccess(linkobj)
@@ -97,5 +100,12 @@ async function getMD5(filepath){
   return hash.digest('hex').toUpperCase();
   }
 
+async function generateIPFSLink(bookPath, title){
+let stream = fs.createReadStream(bookPath)
+const hash = await IFPSHasher.of(stream, {cidVersion:1,rawLeaves:true,hashAlg:'blake2b-256'})
+const filename = path.basename(bookPath);
+const fileExt = filename.split('.').pop()
+return  cloudflareIPFSLink + hash +'?filename='+encodeURIComponent(title+'.'+fileExt)
+}
 
 module.exports.upload = upload;
