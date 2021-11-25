@@ -19,7 +19,7 @@ async function uploadBooks(){
         // Save csv file
         const onUpload = (objLinks) => {
             let lolLink = 'http://library.lol/main/'+objLinks.sharelink.split('/').pop()
-            fs.appendFileSync(path.join(__dirname, "books.csv").replace(',',' '), `${bookPath},${objLinks.sharelink},${lolLink},${objLinks.ipfslink}\n`);
+            fs.appendFileSync(path.join(__dirname, "books.csv"), `${bookPath.replace(',',' ')},${objLinks.sharelink},${lolLink},${objLinks.ipfslink}\n`);
         }
         booksArr.push({path: bookPath, metadata:{"title": title}, onSuccess: onUpload})
     }
