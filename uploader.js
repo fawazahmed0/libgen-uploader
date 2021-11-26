@@ -1,6 +1,7 @@
 const { firefox } = require('playwright');
 const IFPSHasher = require('ipfs-only-hash')
 const fs = require('fs')
+const fetch = require('node-fetch');
 const path = require('path')
 const crypto = require('crypto');
 const { pipeline } = require('stream/promises');
@@ -10,6 +11,7 @@ const url = 'https://libgen.rs'
 const nonfictionurl = url + '/librarian'
 const fictionurl = url + '/foreignfiction/librarian'
 const uploadurl = 'https://library.bz/main/uploads/'
+const checkurl = url + '/book/index.php?md5='
 const cloudflareIPFSLink = 'https://cloudflare-ipfs.com/ipfs/'
 
 const captialize = words => words.split(' ').map( w =>  w.substring(0,1).toUpperCase()+ w.substring(1)).join(' ')
@@ -26,7 +28,12 @@ async function upload(books, options){
   let allLinks = []
 for(let book of books){
   try{
-
+    let md5sum = await getMD5(book.path)
+    let response = await fetch(checkurl+md5sum)
+    if(response.status == 200){
+      console.log(book.path, 'already exists at',checkurl+md5sum,', skipping this book')
+      continue
+    }
     const { fiction = false } = book;
     const gotoURL = fiction ? fictionurl : nonfictionurl;
   try{
@@ -46,7 +53,6 @@ for(let book of books){
   try{
   await page.waitForSelector('text="Google Books ID"')
   }catch(e){
-        let md5sum = await getMD5(book.path)
         let linkobj = {"sharelink":uploadurl+md5sum,"ipfslink":ipfslink}
         allLinks.push(linkobj)
         if(typeof book.onSuccess === 'function')
