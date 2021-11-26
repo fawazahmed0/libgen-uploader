@@ -1,7 +1,6 @@
 const { firefox } = require('playwright');
 const IFPSHasher = require('ipfs-only-hash')
 const fs = require('fs')
-const fetch = require('node-fetch');
 const path = require('path')
 const crypto = require('crypto');
 const { pipeline } = require('stream/promises');
@@ -11,7 +10,6 @@ const url = 'https://libgen.rs'
 const nonfictionurl = url + '/librarian'
 const fictionurl = url + '/foreignfiction/librarian'
 const uploadurl = 'https://library.bz/main/uploads/'
-const checkurl = url + '/book/index.php?md5='
 const cloudflareIPFSLink = 'https://cloudflare-ipfs.com/ipfs/'
 
 const captialize = words => words.split(' ').map( w =>  w.substring(0,1).toUpperCase()+ w.substring(1)).join(' ')
@@ -27,12 +25,13 @@ async function upload(books, options){
     },
   });
   const page = await context.newPage();
+  await page.goto(nonfictionurl);
 
 for(let book of books){
   try{
     let md5sum = await getMD5(book.path)
-    let response = await fetch(checkurl+md5sum)
-    if(response.status == 200){
+    let response = await page.goto(uploadurl+md5sum)
+    if(response.ok()){
       // skipping this book, as it already exists at libgen
       await saveData(book, md5sum)
       continue
