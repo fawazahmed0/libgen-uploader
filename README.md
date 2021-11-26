@@ -33,7 +33,7 @@ let metadata1 = {"title":"Title 1"}
 let book1 = {path:'book1.pdf',metadata:metadata1}
 // Supports all input fields isbn, author, edition, issn ,city etc
 let metadata2 = {"title":"Title 2","language":"english" ,"isbn":"978-1898649304"}
-let book2 = {path:'book2.pdf',metadata:metadata2, fiction:false, onSuccess: (obj) => console.log(obj)}
+let book2 = {path:'book2.pdf',metadata:metadata2, fiction:false, onSuccess: (obj) => console.log(obj), onError: (err,bookObj) => console.log(bookObj)}
 
 upload([book1,book2]).then(console.log)
 

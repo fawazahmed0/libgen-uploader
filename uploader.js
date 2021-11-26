@@ -25,6 +25,8 @@ async function upload(books, options){
   const page = await context.newPage();
   let allLinks = []
 for(let book of books){
+  try{
+
     const { fiction = false } = book;
     const gotoURL = fiction ? fictionurl : nonfictionurl;
   try{
@@ -70,14 +72,31 @@ for(let book of books){
       }
   }
 
-await page.click('text=submit')
 let uploadText = 'An upload link to share'
-await page.waitForSelector('text='+uploadText)
+
+for(let j=0;j<3;j++){
+try{
+await page.click('text=submit')
+await page.waitForSelector('text='+uploadText,{timeout:10000})
+break;
+}catch(e){
+  console.log('Trying to click submit button again')
+}
+}
 const sharelink = await page.locator('text='+uploadText).locator('a').getAttribute('href')
 let linkobj = {"sharelink":sharelink,"ipfslink":ipfslink}
     allLinks.push(linkobj)
     if(typeof book.onSuccess === 'function')
         book.onSuccess(linkobj)
+
+  }catch(e){
+    console.log("failed upload for ", book.path)
+    console.error(e)
+    if(typeof book.onError === 'function')
+        book.onError(e,book)
+
+  }
+
 }
  await browser.close();
 
