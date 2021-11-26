@@ -1,6 +1,6 @@
 {
   "name": "libgen-uploader",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "Upload books to Library genesis",
   "main": "uploader.js",
   "scripts": {},
