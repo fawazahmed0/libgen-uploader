@@ -34,7 +34,7 @@ for(let book of books){
     let response = await fetch(checkurl+md5sum)
     if(response.status == 200){
       console.log(book.path, 'already exists at',checkurl+md5sum,', skipping this book')
-      saveData(book, md5sum)
+      await saveData(book, md5sum)
       continue
     }
     const { fiction = false } = book;
@@ -55,7 +55,7 @@ for(let book of books){
   try{
   await page.waitForSelector('text="Google Books ID"')
   }catch(e){
-        saveData(book, md5sum)
+        await saveData(book, md5sum)
         continue
   }
 
@@ -92,7 +92,7 @@ break;
 await page.waitForSelector('text='+uploadText,{timeout:10000})
 
 //const sharelink = await page.locator('text='+uploadText).locator('a').getAttribute('href')
-saveData(book, md5sum)
+await saveData(book, md5sum)
 
   }catch(e){
     console.log("failed upload for ", book.path)
