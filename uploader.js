@@ -33,7 +33,7 @@ for(let book of books){
     let md5sum = await getMD5(book.path)
     let response = await fetch(checkurl+md5sum)
     if(response.status == 200){
-      console.log(book.path, 'already exists at',checkurl+md5sum,', skipping this book')
+      // skipping this book, as it already exists at libgen
       await saveData(book, md5sum)
       continue
     }
