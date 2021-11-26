@@ -16,6 +16,8 @@ const cloudflareIPFSLink = 'https://cloudflare-ipfs.com/ipfs/'
 
 const captialize = words => words.split(' ').map( w =>  w.substring(0,1).toUpperCase()+ w.substring(1)).join(' ')
 
+let allLinks = []
+
 async function upload(books, options){
   const browser = await firefox.launch(options);
   const context = await browser.newContext({
@@ -25,13 +27,14 @@ async function upload(books, options){
     },
   });
   const page = await context.newPage();
-  let allLinks = []
+
 for(let book of books){
   try{
     let md5sum = await getMD5(book.path)
     let response = await fetch(checkurl+md5sum)
     if(response.status == 200){
       console.log(book.path, 'already exists at',checkurl+md5sum,', skipping this book')
+      saveData(book, md5sum)
       continue
     }
     const { fiction = false } = book;
@@ -49,14 +52,10 @@ for(let book of books){
 
    await page.click('input[type="submit"]',{noWaitAfter:true})
   await page.waitForNavigation({waitUntil: 'networkidle',timeout:0})
-  const ipfslink = await generateIPFSLink(book.path, Object.entries(book.metadata).filter(([key, val]) => key.toLowerCase().startsWith('title'))[0][1])
   try{
   await page.waitForSelector('text="Google Books ID"')
   }catch(e){
-        let linkobj = {"sharelink":uploadurl+md5sum,"ipfslink":ipfslink}
-        allLinks.push(linkobj)
-        if(typeof book.onSuccess === 'function')
-        book.onSuccess(linkobj)
+        saveData(book, md5sum)
         continue
   }
 
@@ -89,11 +88,11 @@ break;
   console.log('Trying to click submit button again')
 }
 }
-const sharelink = await page.locator('text='+uploadText).locator('a').getAttribute('href')
-let linkobj = {"sharelink":sharelink,"ipfslink":ipfslink}
-    allLinks.push(linkobj)
-    if(typeof book.onSuccess === 'function')
-        book.onSuccess(linkobj)
+
+await page.waitForSelector('text='+uploadText,{timeout:10000})
+
+//const sharelink = await page.locator('text='+uploadText).locator('a').getAttribute('href')
+saveData(book, md5sum)
 
   }catch(e){
     console.log("failed upload for ", book.path)
@@ -108,6 +107,15 @@ let linkobj = {"sharelink":sharelink,"ipfslink":ipfslink}
 
  return allLinks;
  
+
+}
+
+async function saveData(book, md5sum){
+  const ipfslink = await generateIPFSLink(book.path, Object.entries(book.metadata).filter(([key, val]) => key.toLowerCase().startsWith('title'))[0][1])
+  let linkobj = {"sharelink":uploadurl+md5sum,"ipfslink":ipfslink}
+    allLinks.push(linkobj)
+    if(typeof book.onSuccess === 'function')
+        book.onSuccess(linkobj)
 
 }
 
