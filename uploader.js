@@ -62,8 +62,12 @@ for(let book of books){
       console.error(e)
       await page.goto(gotoURL.replace('.rs','.is'));
   }
-
-  await page.setInputFiles('input[type="file"]', book.path);
+  try{
+    await page.setInputFiles('input[type="file"]', book.path);
+  }catch(e){
+    await page.waitForTimeout(3000)
+  }
+  
   // select options using
   // await page.selectOption('text="Choose a color"', 'blue');
 
@@ -98,11 +102,12 @@ let uploadText = 'An upload link to share'
 
 for(let j=0;j<3;j++){
 try{
-await page.click('text=submit')
+await page.click('input[type="submit"] >> nth=-1')
 await page.waitForSelector('text='+uploadText,{timeout:10000})
 break;
 }catch(e){
   console.log('Trying to click submit button again')
+  await page.waitForTimeout(2000)
 }
 }
 
