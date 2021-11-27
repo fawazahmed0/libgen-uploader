@@ -27,6 +27,7 @@
   "homepage": "https://github.com/fawazahmed0/libgen-uploader#readme",
   "dependencies": {
     "ipfs-only-hash": "^4.0.0",
+    "node-fetch": "^2.6.6",
     "playwright": "^1.16.3"
   }
 }

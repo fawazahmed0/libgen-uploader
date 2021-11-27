@@ -4,15 +4,29 @@ const fs = require('fs')
 const path = require('path')
 const crypto = require('crypto');
 const { pipeline } = require('stream/promises');
+const fetch = require('node-fetch');
 const user = 'genesis';
 const pass = 'upload';
 const url = 'https://libgen.rs'
 const nonfictionurl = url + '/librarian'
 const fictionurl = url + '/foreignfiction/librarian'
 var uploadurl = 'https://library.bz/main/uploads/'
+const checkurl = url + '/book/index.php?md5='
 const cloudflareIPFSLink = 'https://cloudflare-ipfs.com/ipfs/'
 
 const captialize = words => words.split(' ').map( w =>  w.substring(0,1).toUpperCase()+ w.substring(1)).join(' ')
+
+const fetchWithFallback = async (links,obj) => {
+  let response;
+  for(let link of links)
+  {  try{
+      response = await fetch(link,obj)
+      if(response.ok)
+          return response
+        }catch(e){}
+  }
+  return response;
+}
 
 let allLinks = []
 
@@ -34,8 +48,9 @@ for(let book of books){
       uploadurl = 'https://library.bz/fiction/uploads/'
 
     let md5sum = await getMD5(book.path)
-    let response = await page.goto(uploadurl+md5sum)
-    if(response.ok()){
+    let response = await fetchWithFallback([checkurl,uploadurl].map(e=>e+md5sum),{method:'GET', 
+    headers: {'Authorization': 'Basic ' + btoa(user+':'+pass)}})
+    if(response.ok){
       // skipping this book, as it already exists at libgen
       await saveData(book, md5sum)
       continue
