@@ -9,7 +9,7 @@ const pass = 'upload';
 const url = 'https://libgen.rs'
 const nonfictionurl = url + '/librarian'
 const fictionurl = url + '/foreignfiction/librarian'
-const uploadurl = 'https://library.bz/main/uploads/'
+var uploadurl = 'https://library.bz/main/uploads/'
 const cloudflareIPFSLink = 'https://cloudflare-ipfs.com/ipfs/'
 
 const captialize = words => words.split(' ').map( w =>  w.substring(0,1).toUpperCase()+ w.substring(1)).join(' ')
@@ -29,6 +29,10 @@ async function upload(books, options){
 
 for(let book of books){
   try{
+    const { fiction = false } = book;
+    if(fiction)
+      uploadurl = 'https://library.bz/fiction/uploads/'
+
     let md5sum = await getMD5(book.path)
     let response = await page.goto(uploadurl+md5sum)
     if(response.ok()){
@@ -36,7 +40,6 @@ for(let book of books){
       await saveData(book, md5sum)
       continue
     }
-    const { fiction = false } = book;
     const gotoURL = fiction ? fictionurl : nonfictionurl;
   try{
     await page.goto(gotoURL);
