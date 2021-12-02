@@ -73,13 +73,16 @@ for(let book of books){
 
    await page.click('input[type="submit"]',{noWaitAfter:true})
   await page.waitForNavigation({waitUntil: 'networkidle',timeout:0})
+  let content;
   try{
-  await page.waitForSelector('text="Google Books ID"')
+        content = await page.textContent(':text("Google Books ID"),:text("no file was uploaded ")');
   }catch(e){
         await saveData(book, md5sum)
         continue
   }
 
+  if(content.toLowerCase().includes('no file was uploaded'))
+    throw new Error('File size not supported due to playwright bug https://github.com/microsoft/playwright/issues/3768')
   // set language to english, if no language found
   if(Object.keys(book.metadata).filter(e => e.toLowerCase().startsWith('lang')).length == 0){
       try{await setLanguage(page, "english")}catch(e){console.error(e)}
