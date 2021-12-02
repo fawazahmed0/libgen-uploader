@@ -9,7 +9,7 @@
   
 Please star this repo by clicking on [:star: button](#) above [:arrow_upper_right:](#)
 
-**Note:** There is a [bug](https://github.com/microsoft/playwright/issues/3768) in one dependency package, which causes issues with files > 200MB.
+**Note:** There is a [bug](https://github.com/microsoft/playwright/issues/3768) in one dependency package, which causes issues with files > 50MB.
 
 ### Features:
 - Batch upload
