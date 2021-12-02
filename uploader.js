@@ -76,7 +76,9 @@ for(let book of books){
   let content;
   try{
         content = await page.textContent(':text("Google Books ID"),:text("no file was uploaded ")');
-  }catch(e){
+      }catch(e){
+        let body = await page.textContent('body')
+        console.log("Seems like an error while uploading\n"+body.trim()+"\n")
         await saveData(book, md5sum)
         continue
   }
