@@ -50,13 +50,16 @@ for(let book of books){
     const { fiction = false } = book;
     if(fiction)
       uploadurl = 'https://library.bz/fiction/uploads/'
+    let bookData = book.stream ? book.path : fs.readFileSync(book.path);
+    let md5sum = await getMD5(bookData, book.stream)
+    let ipfsHash = await getIPFSHash(bookData, book.stream)
 
-    let md5sum = await getMD5(book.path)
+
     let response = await fetchWithFallback([checkurl,uploadurl].map(e=>e+md5sum),{method:'GET', 
     headers: {'Authorization': 'Basic ' + btoa(user+':'+pass)}})
     if(response.ok){
       // skipping this book, as it already exists at libgen
-      await saveData(book, md5sum)
+      await saveData(book, md5sum, ipfsHash)
       continue
     }
     const gotoURL = fiction ? fictionurl : nonfictionurl;
@@ -88,7 +91,7 @@ for(let book of books){
         console.log("Please Ignore this debug Message")
         console.log("Maybe the file "+book.path+" already exists in library genesis")
         console.log("\n"+body.trim().replace(/\s+/gi,' ')+"\n\n")
-        await saveData(book, md5sum)
+        await saveData(book, md5sum, ipfsHash)
         continue
   }
 
@@ -128,7 +131,7 @@ break;
 await page.waitForSelector('text='+uploadText,{timeout:10000})
 
 //const sharelink = await page.locator('text='+uploadText).locator('a').getAttribute('href')
-await saveData(book, md5sum)
+await saveData(book, md5sum, ipfsHash)
 
   }catch(e){
     console.log("failed upload for ", book.path)
@@ -147,8 +150,8 @@ await saveData(book, md5sum)
 
 }
 
-async function saveData(book, md5sum){
-  const ipfslink = await generateIPFSLink(book.path, Object.entries(book.metadata).filter(([key, val]) => key.toLowerCase().startsWith('title'))[0][1])
+async function saveData(book, md5sum, ipfsHash){
+  const ipfslink = await generateIPFSLink(ipfsHash, book.path, Object.entries(book.metadata).filter(([key, val]) => key.toLowerCase().startsWith('title'))[0][1])
   let linkobj = {"sharelink":uploadurl+md5sum,"ipfslink":ipfslink}
     allLinks.push(linkobj)
     if(typeof book.onSuccess === 'function')
@@ -161,18 +164,28 @@ async function setLanguage(page, value){
     await page.selectOption('select[name="language_options"]', captialize(value.toLowerCase()))
 }
 
-async function getMD5(filepath){
+// file is either path or filecontent, use path when stream is true
+async function getMD5(file, stream=false){
   const hash = crypto.createHash('md5');
+  if(stream)
   await pipeline(
-    fs.createReadStream(filepath),
+    fs.createReadStream(file),
     hash
-  );
+  )
+  else
+     hash.update(file)
   return hash.digest('hex').toUpperCase();
   }
 
-async function generateIPFSLink(bookPath, title){
-let stream = fs.createReadStream(bookPath)
-const hash = await IFPSHasher.of(stream, {cidVersion:1,rawLeaves:true,hashAlg:'blake2b-256'})
+// file is either path or filecontent, use path when stream is true
+async function getIPFSHash(file, stream=false){
+  if(stream)
+   file = fs.createReadStream(file)
+  const hash = await IFPSHasher.of(file, {cidVersion:1,rawLeaves:true,hashAlg:'blake2b-256'})
+  return hash
+}
+
+async function generateIPFSLink(hash, bookPath, title){
 const filename = path.basename(bookPath);
 const fileExt = filename.split('.').pop()
 return  cloudflareIPFSLink + hash +'?filename='+encodeURIComponent(title+'.'+fileExt)
