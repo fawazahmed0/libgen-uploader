@@ -84,9 +84,10 @@ for(let book of books){
   try{
         content = await page.textContent(':text("Google Books ID"),:text("no file was uploaded ")');
       }catch(e){
-        let body = await page.textContent('body')
+        let body = await puppeteerPage.evaluate(()=>document.querySelector('body').textContent)
+        console.log("Please Ignore this debug Message")
         console.log("Maybe the file "+book.path+" already exists in library genesis")
-        console.log("Please Ignore this debug Message \n\n"+body.trim().replace(/\s+/gi,' ')+"\n\n")
+        console.log("\n"+body.trim().replace(/\s+/gi,' ')+"\n\n")
         await saveData(book, md5sum)
         continue
   }
