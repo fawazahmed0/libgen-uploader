@@ -1,4 +1,5 @@
 const { firefox } = require('playwright');
+const puppeteer = require('puppeteer');
 const IFPSHasher = require('ipfs-only-hash')
 const fs = require('fs')
 const path = require('path')
@@ -39,7 +40,10 @@ async function upload(books, options){
     },
   });
   const page = await context.newPage();
-  await page.goto(nonfictionurl);
+  await page.goto(nonfictionurl,{timeout:70000});
+  const puppeteerBrowser = await puppeteer.launch();
+  const puppeteerPage = await puppeteerBrowser.newPage();
+  await puppeteerPage.authenticate({'username':user, 'password': pass});
 
 for(let book of books){
   try{
@@ -57,22 +61,25 @@ for(let book of books){
     }
     const gotoURL = fiction ? fictionurl : nonfictionurl;
   try{
-    await page.goto(gotoURL);
+    await puppeteerPage.goto(gotoURL,{
+      waitUntil: 'networkidle0',
+    });
   }catch(e){
       console.error(e)
-      await page.goto(gotoURL.replace('.rs','.is'));
-  }
-  try{
-    await page.setInputFiles('input[type="file"]', book.path);
-  }catch(e){
-    await page.waitForTimeout(3000)
+      await puppeteerPage.goto(gotoURL.replace('.rs','.is'),{
+        waitUntil: 'networkidle0',
+      });
   }
   
+    const inputUploadHandle = await puppeteerPage.$('input[type=file]');
+    inputUploadHandle.uploadFile(book.path);
+
   // select options using
   // await page.selectOption('text="Choose a color"', 'blue');
 
-   await page.click('input[type="submit"]',{noWaitAfter:true})
-  await page.waitForNavigation({waitUntil: 'networkidle',timeout:0})
+  await puppeteerPage.click('input[type="submit"]')
+  await puppeteerPage.waitForNetworkIdle({timeout:0})
+  await page.goto(puppeteerPage.url())
   let content;
   try{
         content = await page.textContent(':text("Google Books ID"),:text("no file was uploaded ")');
@@ -131,6 +138,7 @@ await saveData(book, md5sum)
 
 }
  await browser.close();
+ await puppeteerBrowser.close();
 
  return allLinks;
  
