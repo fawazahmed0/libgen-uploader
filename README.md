@@ -75,9 +75,6 @@ upload([book1,book2], {headless:false}).then(console.log)
 **Note 3:** IPFS Link will start working after 4-5 days <br><br>
 **Manual Guide for Noobs:** [Link](https://github.com/fawazahmed0/sharebook/)
 
-### Support:
-You can help support this package by as little as $3<br>
-[Support Link](https://fawazahmed0.github.io/donate)
 <br>
 <br>
   
