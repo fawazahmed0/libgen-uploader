@@ -5,17 +5,7 @@
   
 [![npm version](https://img.shields.io/npm/v/libgen-uploader.svg?style=flat)](https://www.npmjs.com/package/libgen-uploader)
   
-------------
- 
- <div style="display:flex;">
-    <div><h4 align="center"><a href="https://sendletters.pp.ua"><img src="https://github.com/fawazahmed0/tiger/raw/master/envelope.svg" width="250" alt="SendLetters Brand Image"></a><br>This package is Sponsored by SendLetters, the Easiest way to Send Letters & Documents <a href="https://sendletters.pp.ua">Physically Anywhere in the World</a>.</h4></div>
-</div>
-
- 
-------------
-  
-  
- **In the name of God, who have guided me to do this work**
+**In the name of God, who have guided me to do this work**
   
 Please star this repo by clicking on [:star: button](#) above [:arrow_upper_right:](#)
 
