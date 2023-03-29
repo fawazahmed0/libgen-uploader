@@ -6,8 +6,7 @@
 [![npm version](https://img.shields.io/npm/v/libgen-uploader.svg?style=flat)](https://www.npmjs.com/package/libgen-uploader)
   
 **In the name of God, who has guided me to do this work**
-  
-Please star this repo by clicking on [:star: button](#) above [:arrow_upper_right:](#)
+ 
 
 
 ### Features:
