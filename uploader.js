@@ -13,7 +13,7 @@ const nonfictionurl = url + '/librarian'
 const fictionurl = url + '/foreignfiction/librarian'
 var uploadurl = 'https://library.bz/main/uploads/'
 const checkurl = url + '/book/index.php?md5='
-const cloudflareIPFSLink = 'https://cloudflare-ipfs.com/ipfs/'
+const cloudflareIPFSLink = 'https://ipfs.io/ipfs/'
 
 const captialize = words => words.split(' ').map( w =>  w.substring(0,1).toUpperCase()+ w.substring(1)).join(' ')
 
